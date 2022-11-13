@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "430965875310",
+    "project_id": "walldeco-c1d3e",
+    "storage_bucket": "walldeco-c1d3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430965875310:android:f5f920688a6db6a9367c7f",
+        "android_client_info": {
+          "package_name": "com.example.wallpaper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430965875310-4d05jbcg989k0nv6mst65n50psp0r30s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wallpaper",
+            "certificate_hash": "ecaa36ce78595468c7ec03bb4d3e7ee0f3d571c1"
+          }
+        },
+        {
+          "client_id": "430965875310-ocl2inndal4mt0hg3qin2lumc4r2i604.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAos8coDU9Lpqq6djXX0OJ3leQtRUzT8g8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430965875310-ocl2inndal4mt0hg3qin2lumc4r2i604.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
