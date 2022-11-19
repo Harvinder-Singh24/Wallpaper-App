@@ -47,64 +47,72 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xfff5f8fd),
-                      borderRadius: BorderRadius.circular(9),
-                    ),
-                    margin: const EdgeInsets.symmetric(horizontal: 24),
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: TextFormField(
-                          controller: searchController,
-                          decoration: const InputDecoration(
-                              hintText: "search wallpapers",
-                              hintStyle: TextStyle(fontSize: 14),
-                              border: InputBorder.none),
-                        )),
-                        GestureDetector(
-                            onTap: () {
-                              if (searchController.text != '') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SearchPage(
-                                      controller: searchController,
+      body: RefreshIndicator(
+        color: Colors.purple,
+        onRefresh: () async {
+          wallpapers.page++;
+          wallpapers.wallpaper.clear();
+          wallpapers.getData();
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xfff5f8fd),
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: TextFormField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                                hintText: "search wallpapers",
+                                hintStyle: TextStyle(fontSize: 14),
+                                border: InputBorder.none),
+                          )),
+                          GestureDetector(
+                              onTap: () {
+                                if (searchController.text != '') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SearchPage(
+                                        query: searchController.text,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Invalid Search")),
-                                );
-                              }
-                            },
-                            child: const Icon(IconlyLight.search))
-                      ],
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text("Invalid Search")),
+                                  );
+                                }
+                              },
+                              child: const Icon(IconlyLight.search))
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child:
-                          const Text("Today", style: TextStyle(fontSize: 18))),
-                  const SizedBox(height: 20),
-                  wallPaper(wallpapers.wallpaper, context)
-                ],
-              )
-            ],
+                    const SizedBox(height: 20),
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text("Today",
+                            style: TextStyle(fontSize: 18))),
+                    const SizedBox(height: 20),
+                    wallPaper(wallpapers.wallpaper, context),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

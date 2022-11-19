@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:wallpaper/screens/emailverify_screen.dart';
 import 'package:wallpaper/utils/colors.dart';
@@ -18,9 +19,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   bool _isVisible = true;
   bool _isvisibleConfirm = true;
   final AuthService _authService = AuthService();
+
+  void save_user_detail() async{
+    SharedPreferences sharedPreferences =await SharedPreferences.getInstance();
+    sharedPreferences.setString("name", _nameController.text);
+    sharedPreferences.setString("email", _emailController.text);
+    print("User Details has been saved");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 80),
                   TextFormField(
+                    controller: _nameController,
                     style: const TextStyle(color: Colors.black87),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -162,8 +172,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     height: 100,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: ()  {
                       if (_key.currentState!.validate()) {
+
                         setState(() {
                           _authService.isLoading = true;
                         });
@@ -190,6 +201,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             ),
                                           ),
                                         ),
+
+                                        save_user_detail(),
+
                                       }
                                     else
                                       {

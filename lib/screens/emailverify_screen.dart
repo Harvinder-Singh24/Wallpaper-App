@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:email_otp/email_otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_up_animation/show_up_animation.dart';
+import 'package:wallpaper/services/auth_service.dart';
 import 'package:wallpaper/utils/colors.dart';
 import 'package:lottie/lottie.dart';
 
@@ -21,6 +23,7 @@ class EmailVerification extends StatefulWidget {
 
 class _EmailVerificationState extends State<EmailVerification> {
   final TextEditingController _controller = TextEditingController();
+  AuthService _authService = AuthService();
   EmailOTP myauth = EmailOTP();
   bool _isLoading = false;
   bool _isVerified = false;
@@ -53,6 +56,9 @@ class _EmailVerificationState extends State<EmailVerification> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Oops, OTP send failed"),
         ));
+        Navigator.pop(context);
+        _authService.signOut();
+        print("Sign Out Done");
       }
     });
   }
@@ -202,7 +208,7 @@ class _EmailVerificationState extends State<EmailVerification> {
 
   Widget Lotti_Animation() {
     Timer(
-        const Duration(seconds: 5),
+        const Duration(seconds: 2),
         () => {
               Navigator.push(
                   context,

@@ -66,7 +66,7 @@ class _ImageViewState extends State<ImageView> {
                               height: 40,
                               color: Colors.white,
                               child: const Icon(IconlyLight.bookmark,
-                                  color: Colors.indigo))),
+                                  color: Colors.indigo),),),
                     ),
                     GestureDetector(
                       onTap: () {

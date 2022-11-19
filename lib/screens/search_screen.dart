@@ -6,8 +6,8 @@ import 'package:wallpaper/utils/strin_extension.dart';
 import '../provider/main_provider.dart';
 
 class SearchPage extends StatefulWidget {
-  final TextEditingController controller;
-  const SearchPage({Key? key, required this.controller}) : super(key: key);
+  final String query;
+  const SearchPage({Key? key, required this.query}) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -16,10 +16,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    print(widget.controller.text);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final provider = Provider.of<WallpaperProvider>(context, listen: false);
-      provider.search_data(widget.controller.text);
+      provider.search_data(widget.query);
     });
     super.initState();
   }
@@ -27,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final wallpapers = Provider.of<WallpaperProvider>(context);
-    var searchQuery = widget.controller.text.capitalize();
+    var searchQuery = widget.query.capitalize();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -44,21 +43,30 @@ class _SearchPageState extends State<SearchPage> {
         onWillPop: () async {
           print("Data Cleared");
           wallpapers.clear_search_data();
+          wallpapers.search_page = 1;
           return true;
         },
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: SizedBox(
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 24,
-                ),
-                wallPaper(wallpapers.searchWallpaper, context),
-                const SizedBox(
-                  height: 24,
-                ),
-              ],
+        child: RefreshIndicator(
+          color: Colors.purple,
+          onRefresh: () async {
+            wallpapers.search_page++;
+            wallpapers.searchWallpaper.clear();
+            wallpapers.search_data(searchQuery);
+          },
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  wallPaper(wallpapers.searchWallpaper, context),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/provider/main_provider.dart';
-import 'package:wallpaper/screens/emailverify_screen.dart';
 import 'package:wallpaper/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
