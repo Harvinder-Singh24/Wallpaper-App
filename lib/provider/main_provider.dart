@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +21,6 @@ class WallpaperProvider with ChangeNotifier {
   List<String> _savedWallpapers = [];
   List<String> get savedWallpapers => _savedWallpapers;
 
-
   int page = 1;
   int search_page = 1;
   bool isLoading = false;
@@ -30,18 +30,20 @@ class WallpaperProvider with ChangeNotifier {
     getSavedData();
   }
 
-  void getSavedData()async{
+  void getSavedData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     List<String>? _gotList = sharedPreferences.getStringList('items');
     print("Wallpapers got from shared Prefrences ${_gotList}");
-    _savedWallpapers =_gotList!;
+    _savedWallpapers = _gotList ?? [];
     notifyListeners();
   }
 
   //function to fetch the _wallpapers
   void getData() async {
     isLoading = true;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
 
     var response = await http.get(
         Uri.parse("https://api.pexels.com/v1/curated?page=$page&per_page=1000"),
@@ -56,7 +58,9 @@ class WallpaperProvider with ChangeNotifier {
     });
 
     isLoading = false;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
   }
 
   void clear_search_data() {
@@ -68,15 +72,14 @@ class WallpaperProvider with ChangeNotifier {
     print(" Saved Wallpaper List ${_savedWallpapers}");
   }
 
-
   void save_img(String imgurl) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _savedWallpapers.add(imgurl);
-    sharedPreferences.setStringList('items',_savedWallpapers);
+    sharedPreferences.setStringList('items', _savedWallpapers);
     notifyListeners();
   }
 
-  void remove_img(int  index) async {
+  void remove_img(int index) async {
     _savedWallpapers.removeAt(index);
     notifyListeners();
   }
@@ -84,7 +87,8 @@ class WallpaperProvider with ChangeNotifier {
   void search_data(String query) async {
     print("Search APi Calls");
     var response = await http.get(
-        Uri.parse("https://api.pexels.com/v1/search?query=$query&page=$search_page&per_page=1000"),
+        Uri.parse(
+            "https://api.pexels.com/v1/search?query=$query&page=$search_page&per_page=1000"),
         headers: {
           'Authorization': API_KEY,
         });
@@ -103,22 +107,18 @@ class WallpaperProvider with ChangeNotifier {
     int location = WallpaperManagerFlutter.HOME_SCREEN;
     try {
       WallpaperManagerFlutter().setwallpaperfromFile(file, location);
-      showToast(
-          "Wallpaper Set",
+      showToast("Wallpaper Set",
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
-      notifyListeners();
     } catch (e) {
-      showToast(
-          e.toString(),
+      showToast(e.toString(),
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
       print(e);
-      notifyListeners();
     }
   }
 
@@ -128,21 +128,17 @@ class WallpaperProvider with ChangeNotifier {
     int location = WallpaperManagerFlutter.LOCK_SCREEN;
     try {
       WallpaperManagerFlutter().setwallpaperfromFile(file, location);
-      showToast(
-          "Wallpaper Set",
+      showToast("Wallpaper Set",
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
-      notifyListeners();
     } catch (e) {
-      showToast(
-          e.toString(),
+      showToast(e.toString(),
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
-      notifyListeners();
     }
   }
 
@@ -152,21 +148,17 @@ class WallpaperProvider with ChangeNotifier {
     int location = WallpaperManagerFlutter.BOTH_SCREENS;
     try {
       WallpaperManagerFlutter().setwallpaperfromFile(file, location);
-      showToast(
-          "Wallpaper Set",
+      showToast("Wallpaper Set",
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
-      notifyListeners();
     } catch (e) {
-      showToast(
-          e.toString(),
+      showToast(e.toString(),
           context: context,
           backgroundColor: Colors.white,
           textStyle: const TextStyle(color: Colors.black),
           animation: StyledToastAnimation.scale);
-      notifyListeners();
     }
   }
 }

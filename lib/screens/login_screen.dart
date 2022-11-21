@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:wallpaper/services/auth_service.dart';
 import 'package:wallpaper/utils/colors.dart';
+import '../provider/connectivity_provider.dart';
+import '../utils/helper.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,10 +23,32 @@ class _LoginScreenState extends State<LoginScreen> {
   AuthService _authService = AuthService();
   bool _isLoading = false;
   @override
+  void initState() {
+    Provider.of<ConnectivityProvider>(context, listen: false).startMonitoring();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: SingleChildScrollView(
+      body: finalUI(),
+    );
+  }
+
+  Widget finalUI() {
+    return Consumer<ConnectivityProvider>(builder: (context, model, child) {
+      if (model.isOnline != null) {
+        return model.isOnline ?? false ? loginUI() : NoInternet();
+      }
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    });
+  }
+
+  Widget loginUI() {
+    return SafeArea(
+      child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -168,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      )),
+      ),
     );
   }
 }

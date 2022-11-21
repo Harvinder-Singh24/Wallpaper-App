@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper/provider/main_provider.dart';
 import '../modals/photo_modal.dart';
@@ -59,4 +60,8 @@ Widget wallPaper(List<PhotosModel> listPhotos, BuildContext context) {
       ),
     ],
   );
+}
+
+Widget NoInternet() {
+  return Center(child: Lottie.asset("assets/animation/nointernet.json"));
 }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallpaper/utils/colors.dart';
+import 'package:wallpaper/utils/helper.dart';
+
+import '../../provider/connectivity_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -10,10 +14,14 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with AutomaticKeepAliveClientMixin<ProfileScreen> {
   bool isSwitched = false;
   String? name;
   String? email;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -65,58 +73,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 30),
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: const [
-                      CircleAvatar(
-                        radius: 100,
-                        backgroundImage: NetworkImage(
-                          "https://media.istockphoto.com/id/1300972574/photo/millennial-male-team-leader-organize-virtual-workshop-with-employees-online.jpg?b=1&s=170667a&w=0&k=20&c=96pCQon1xF3_onEkkckNg4cC9SCbshMvx0CfKl2ZiYs=",
-                        ),
+      body: pageUI(),
+    );
+  }
+
+  Widget pageUI() {
+    return Consumer<ConnectivityProvider>(builder: (context, modal, child) {
+      if (modal.isOnline != null) {
+        return modal.isOnline ?? false ? profilescreenUI() : NoInternet();
+      }
+      return const Center(child: CircularProgressIndicator());
+    });
+  }
+
+  Widget profilescreenUI() {
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 30),
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: const [
+                    CircleAvatar(
+                      radius: 100,
+                      backgroundImage: NetworkImage(
+                        "https://media.istockphoto.com/id/1300972574/photo/millennial-male-team-leader-organize-virtual-workshop-with-employees-online.jpg?b=1&s=170667a&w=0&k=20&c=96pCQon1xF3_onEkkckNg4cC9SCbshMvx0CfKl2ZiYs=",
                       ),
-                      CircleAvatar(radius: 20, child: Icon(IconlyLight.camera))
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                name.toString() ?? '',
-                style: const TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              Text(
-                email.toString() ?? '',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 80),
-                child: Column(
-                  children: [
-                    options_row(
-                        IconlyLight.notification, "Notifications", true),
-                    const SizedBox(
-                      height: 20,
                     ),
-                    options_row(IconlyLight.activity, "Feedback", false),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    options_row(IconlyLight.logout, "Logout", false),
+                    CircleAvatar(radius: 20, child: Icon(IconlyLight.camera))
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              name.toString() ?? '',
+              style: const TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            Text(
+              email.toString() ?? '',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 80),
+              child: Column(
+                children: [
+                  options_row(IconlyLight.notification, "Notifications", true),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  options_row(IconlyLight.activity, "Feedback", false),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  options_row(IconlyLight.logout, "Logout", false),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

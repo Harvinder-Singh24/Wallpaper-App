@@ -14,13 +14,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-  List pages = const [
-    MainScreen(),
-    CatergoryScreen(),
-    SaveScreen(),
-    ProfileScreen()
-  ];
+  var _selectedPageIndex;
+  late List<Widget> _pages;
+  late PageController _pageController;
+
+
+  @override
+  void initState() {
+    _selectedPageIndex = 0;
+    _pages = const [
+      //The individual tabs.
+      MainScreen(),
+      CatergoryScreen(),
+      SaveScreen(),
+      ProfileScreen()
+    ];
+
+    _pageController = PageController(initialPage: _selectedPageIndex);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
             type: BottomNavigationBarType.fixed,
             onTap: (index) {
               setState(() {
-                _currentIndex = index;
+                _selectedPageIndex = index;
+                _pageController.jumpToPage(_selectedPageIndex);
               });
             },
-            currentIndex: _currentIndex,
+            currentIndex: _selectedPageIndex,
             elevation: 0,
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -49,7 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: "profile", icon: Icon(IconlyBold.profile))
             ]),
         body: WillPopScope(
-          child: pages[_currentIndex],
+          child: PageView(
+            controller: _pageController,
+            physics: NeverScrollableScrollPhysics(),
+            children: _pages,
+          ),
           onWillPop: () {
             SystemNavigator.pop();
             throw "Cannot Back";

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wallpaper/provider/connectivity_provider.dart';
 import 'package:wallpaper/utils/helper.dart';
 import 'package:wallpaper/utils/strin_extension.dart';
 
@@ -19,13 +20,14 @@ class _SearchPageState extends State<SearchPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final provider = Provider.of<WallpaperProvider>(context, listen: false);
       provider.search_data(widget.query);
+      Provider.of<ConnectivityProvider>(context, listen: false)
+          .startMonitoring();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final wallpapers = Provider.of<WallpaperProvider>(context);
     var searchQuery = widget.query.capitalize();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -39,34 +41,52 @@ class _SearchPageState extends State<SearchPage> {
           centerTitle: true,
           elevation: 0,
           backgroundColor: Colors.white),
-      body: WillPopScope(
-        onWillPop: () async {
-          print("Data Cleared");
-          wallpapers.clear_search_data();
-          wallpapers.search_page = 1;
-          return true;
+      body: finalUI(),
+    );
+  }
+
+  Widget finalUI() {
+    return Consumer<ConnectivityProvider>(builder: (context, model, child) {
+      if (model.isOnline != null) {
+        return model.isOnline ?? false
+            ? searchUI(widget.query.capitalize())
+            : NoInternet();
+      }
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    });
+  }
+
+  Widget searchUI(String searchtext) {
+    final wallpapers = Provider.of<WallpaperProvider>(context);
+    return WillPopScope(
+      onWillPop: () async {
+        print("Data Cleared");
+        wallpapers.clear_search_data();
+        wallpapers.search_page = 1;
+        return true;
+      },
+      child: RefreshIndicator(
+        color: Colors.purple,
+        onRefresh: () async {
+          wallpapers.search_page++;
+          wallpapers.searchWallpaper.clear();
+          wallpapers.search_data(searchtext);
         },
-        child: RefreshIndicator(
-          color: Colors.purple,
-          onRefresh: () async {
-            wallpapers.search_page++;
-            wallpapers.searchWallpaper.clear();
-            wallpapers.search_data(searchQuery);
-          },
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  wallPaper(wallpapers.searchWallpaper, context),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                ],
-              ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: SizedBox(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 24,
+                ),
+                wallPaper(wallpapers.searchWallpaper, context),
+                const SizedBox(
+                  height: 24,
+                ),
+              ],
             ),
           ),
         ),

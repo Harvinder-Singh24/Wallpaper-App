@@ -14,13 +14,16 @@ import 'package:wallpaper/provider/main_provider.dart';
 class ImageView extends StatefulWidget {
   final String imgPath;
 
-  const ImageView({required this.imgPath});
+  ImageView({required this.imgPath});
 
   @override
   _ImageViewState createState() => _ImageViewState();
 }
 
-class _ImageViewState extends State<ImageView> {
+class _ImageViewState extends State<ImageView> with AutomaticKeepAliveClientMixin<ImageView> {
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
