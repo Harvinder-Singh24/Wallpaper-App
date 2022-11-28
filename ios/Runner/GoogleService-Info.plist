@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>430965875310-a9s3c7o73pjfu1bpvpqo5621i187issg.apps.googleusercontent.com</string>
+	<string>430965875310-m4jdhstg1a2urh76qouk9g0ra6s7vuph.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.430965875310-a9s3c7o73pjfu1bpvpqo5621i187issg</string>
+	<string>com.googleusercontent.apps.430965875310-m4jdhstg1a2urh76qouk9g0ra6s7vuph</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>430965875310-4d05jbcg989k0nv6mst65n50psp0r30s.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.wallpaper</string>
+	<string>com.example.wallpaper.ios</string>
 	<key>PROJECT_ID</key>
 	<string>walldeco-c1d3e</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:430965875310:ios:32070ba74a9409c2367c7f</string>
+	<string>1:430965875310:ios:4f5318d963c0ae8f367c7f</string>
 </dict>
 </plist>

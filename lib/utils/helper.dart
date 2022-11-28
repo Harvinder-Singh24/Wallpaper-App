@@ -49,15 +49,6 @@ Widget wallPaper(List<PhotosModel> listPhotos, BuildContext context) {
               ));
             }).toList()),
       ),
-      const SizedBox(height: 20),
-      Center(
-        child: Text(
-          "Refresh to load more",
-          style: TextStyle(
-            color: Colors.grey[400],
-          ),
-        ),
-      ),
     ],
   );
 }

@@ -18,7 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late List<Widget> _pages;
   late PageController _pageController;
 
-
   @override
   void initState() {
     _selectedPageIndex = 0;
@@ -71,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: WillPopScope(
           child: PageView(
             controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: _pages,
           ),
           onWillPop: () {

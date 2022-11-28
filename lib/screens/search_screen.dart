@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wallpaper/provider/connectivity_provider.dart';
 import 'package:wallpaper/utils/helper.dart';
 import 'package:wallpaper/utils/strin_extension.dart';
@@ -15,6 +16,14 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -67,12 +76,15 @@ class _SearchPageState extends State<SearchPage> {
         wallpapers.search_page = 1;
         return true;
       },
-      child: RefreshIndicator(
-        color: Colors.purple,
-        onRefresh: () async {
+      child: SmartRefresher(
+        physics: const BouncingScrollPhysics(),
+        enablePullDown: false,
+        enablePullUp: true,
+        controller: _refreshController,
+        onLoading: () async {
           wallpapers.search_page++;
-          wallpapers.searchWallpaper.clear();
           wallpapers.search_data(searchtext);
+          _refreshController.loadComplete();
         },
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

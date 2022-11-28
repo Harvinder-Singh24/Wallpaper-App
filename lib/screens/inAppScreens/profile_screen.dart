@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallpaper/screens/splash_screen.dart';
+import 'package:wallpaper/services/auth_service.dart';
 import 'package:wallpaper/utils/colors.dart';
 import 'package:wallpaper/utils/helper.dart';
 
@@ -34,10 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         await SharedPreferences.getInstance();
     var namegot = sharedpreference.getString('name');
     var emailgot = sharedpreference.getString('email');
-    setState(() {
-      name = namegot;
-      email = emailgot;
-    });
+
     print("Name got from Shared Prefrnces ${name}");
     print("Email got from Shared Prefrences ${email}");
   }
@@ -87,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget profilescreenUI() {
+    AuthService _authService = AuthService();
     return SingleChildScrollView(
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 30),
@@ -131,7 +131,103 @@ class _ProfileScreenState extends State<ProfileScreen>
                   const SizedBox(
                     height: 20,
                   ),
-                  options_row(IconlyLight.logout, "Logout", false),
+                  GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            backgroundColor: Colors.white,
+                            context: context,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(25.0)),
+                            ),
+                            builder: (builder) {
+                              return Container(
+                                  height: 120,
+                                  margin: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Want to Logout",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              SharedPreferences
+                                                  sharedPreferences =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              _authService.signOut();
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text("Logout")));
+                                              sharedPreferences.setBool(
+                                                  "islogin", false);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SplashScreen()));
+                                            },
+                                            child: Container(
+                                              width: 120,
+                                              height: 56,
+                                              decoration: BoxDecoration(
+                                                color: Colors.indigo[600],
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Center(
+                                                child: Text("Yes",
+                                                    style: TextStyle(
+                                                        color: backgroundColor,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                              width: 120,
+                                              height: 56,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Center(
+                                                child: Text("No",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.indigo[600],
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ));
+                            });
+                      },
+                      child: options_row(IconlyLight.logout, "Logout", false)),
                 ],
               ),
             ),

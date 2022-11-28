@@ -147,6 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         _isLoading = false;
                                       }),
                                       sharedpreference.setBool('islogin', true),
+                                      sharedpreference.setString(
+                                          "email", _emailController.text),
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

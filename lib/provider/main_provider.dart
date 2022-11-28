@@ -41,9 +41,7 @@ class WallpaperProvider with ChangeNotifier {
   //function to fetch the _wallpapers
   void getData() async {
     isLoading = true;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      notifyListeners();
-    });
+    notifyListeners();
 
     var response = await http.get(
         Uri.parse("https://api.pexels.com/v1/curated?page=$page&per_page=1000"),
@@ -56,11 +54,10 @@ class WallpaperProvider with ChangeNotifier {
       model = PhotosModel.fromMap(element);
       _wallpapers.add(model);
     });
+    print(_wallpapers.length);
 
     isLoading = false;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
   void clear_search_data() {
@@ -73,14 +70,19 @@ class WallpaperProvider with ChangeNotifier {
   }
 
   void save_img(String imgurl) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    _savedWallpapers.add(imgurl);
-    sharedPreferences.setStringList('items', _savedWallpapers);
-    notifyListeners();
+
+      SharedPreferences sharedPreferences = await SharedPreferences
+          .getInstance();
+      _savedWallpapers.add(imgurl);
+      sharedPreferences.setStringList('items', _savedWallpapers);
+      notifyListeners();
   }
 
   void remove_img(int index) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _savedWallpapers.removeAt(index);
+    print("List After removing $_savedWallpapers");
+    _savedWallpapers.isEmpty ? sharedPreferences.remove('items') : print("Nothing to remove");
     notifyListeners();
   }
 
