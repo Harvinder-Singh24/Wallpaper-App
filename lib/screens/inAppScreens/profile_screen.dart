@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallpaper/screens/splash_screen.dart';
 import 'package:wallpaper/services/auth_service.dart';
+import 'package:wallpaper/services/database_service.dart';
 import 'package:wallpaper/utils/colors.dart';
 import 'package:wallpaper/utils/helper.dart';
 
@@ -21,6 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isSwitched = false;
   String? name;
   String? email;
+  final userRef = FirebaseFirestore.instance.collection('users');
+
 
   @override
   bool get wantKeepAlive => true;
@@ -31,14 +37,23 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.initState();
   }
 
+
   void getData() async {
-    final SharedPreferences sharedpreference =
+    await for (var snapshot in userRef.snapshots()) {
+      for (var document in snapshot.docs) {
+        setState(() {
+          name = document['Name'];
+          email = document['email'];
+        });
+      }
+    }
+
+    /*final SharedPreferences sharedpreference =
         await SharedPreferences.getInstance();
     var namegot = sharedpreference.getString('name');
     var emailgot = sharedpreference.getString('email');
-
     print("Name got from Shared Prefrnces ${name}");
-    print("Email got from Shared Prefrences ${email}");
+    print("Email got from Shared Prefrences ${email}");*/
   }
 
   void toogleSwitched(bool value) {

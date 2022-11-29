@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:wallpaper/provider/connectivity_provider.dart';
-import 'package:wallpaper/screens/login_screen.dart';
-import 'package:wallpaper/screens/onboardingscreen.dart';
-import 'package:wallpaper/screens/register_screen.dart';
+import 'package:wallpaper/screens/authScreens/login_screen.dart';
+import 'package:wallpaper/screens/authScreens/register_screen.dart';
 import 'package:wallpaper/utils/colors.dart';
 import 'package:wallpaper/utils/helper.dart';
 
