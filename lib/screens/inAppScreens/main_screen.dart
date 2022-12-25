@@ -11,7 +11,7 @@ import 'package:wallpaper/utils/api_key.dart';
 import 'package:wallpaper/utils/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallpaper/utils/helper.dart';
-
+import 'dart:ui';
 import '../../provider/connectivity_provider.dart';
 import '../search_screen.dart';
 
@@ -49,10 +49,10 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Color(0xffFFFFFA),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: backgroundColor,
+        backgroundColor: Color(0xffFFFFFA),
         centerTitle: true,
         title: const Text(
           "Walldeco",

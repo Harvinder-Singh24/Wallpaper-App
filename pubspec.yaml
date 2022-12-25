@@ -38,6 +38,7 @@ dependencies:
   email_otp: ^1.0.4
   firebase_auth: ^4.1.2
   firebase_core: ^2.2.0
+  firebase_storage: ^11.0.8
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.1.2
@@ -46,6 +47,7 @@ dependencies:
   gallery_saver: ^2.3.2
   google_fonts: ^3.0.1
   http: ^0.13.5
+  image_picker: ^0.8.6
   lottie: ^2.0.0
   no_internet_check: ^1.0.0
   path_provider: ^2.0.11
@@ -55,6 +57,7 @@ dependencies:
   shared_preferences: ^2.0.15
   show_up_animation: ^2.0.0
   wallpaper_manager_flutter: ^0.0.2
+  animated_bottom_navigation_bar: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
