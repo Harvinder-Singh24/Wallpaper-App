@@ -1,7 +1,7 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:wallpaper/screens/inAppScreens/category_screen.dart';
 import 'package:wallpaper/screens/inAppScreens/main_screen.dart';
 import 'package:wallpaper/screens/inAppScreens/profile_screen.dart';
@@ -39,49 +39,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         isSkipped: widget.isSkipped,
       )
     ];
-
-    final systemTheme = SystemUiOverlayStyle.light.copyWith(
-      systemNavigationBarColor: const Color(0xff373A36),
-      systemNavigationBarIconBrightness: Brightness.light,
-    );
-    SystemChrome.setSystemUIOverlayStyle(systemTheme);
-
-    _fabAnimationController = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _borderRadiusAnimationController = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-    fabCurve = CurvedAnimation(
-      parent: _fabAnimationController,
-      curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
-    );
-    borderRadiusCurve = CurvedAnimation(
-      parent: _borderRadiusAnimationController,
-      curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
-    );
-
-    fabAnimation = Tween<double>(begin: 0, end: 1).animate(fabCurve);
-    borderRadiusAnimation = Tween<double>(begin: 0, end: 1).animate(
-      borderRadiusCurve,
-    );
-
-    _hideBottomBarAnimationController = AnimationController(
-      duration: Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    Future.delayed(
-      Duration(seconds: 1),
-      () => _fabAnimationController.forward(),
-    );
-    Future.delayed(
-      Duration(seconds: 1),
-      () => _borderRadiusAnimationController.forward(),
-    );
-
     _pageController = PageController(initialPage: _selectedPageIndex);
     super.initState();
   }
@@ -95,43 +52,50 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.indigo[600],
-          child: const Icon(
-            Icons.brightness_3,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _fabAnimationController.reset();
-            _borderRadiusAnimationController.reset();
-            _borderRadiusAnimationController.forward();
-            _fabAnimationController.forward();
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: AnimatedBottomNavigationBar(
-          icons: const [
-            IconlyBold.home,
-            IconlyBold.category,
-            IconlyBold.bookmark,
-            IconlyBold.profile
-          ],
-          backgroundColor: Colors.white10,
-          activeIndex: _selectedPageIndex,
-          splashColor: const Color(0xffFFA400),
-          notchAndCornersAnimation: borderRadiusAnimation,
-          splashSpeedInMilliseconds: 300,
-          notchSmoothness: NotchSmoothness.defaultEdge,
-          gapLocation: GapLocation.center,
-          leftCornerRadius: 32,
-          rightCornerRadius: 32,
-          onTap: (index) => setState(() => {
-                _selectedPageIndex = index,
-                _pageController.jumpToPage(_selectedPageIndex),
-              }),
-          hideAnimationController: _hideBottomBarAnimationController,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+          child: GNav(
+              onTabChange: (index) {
+                setState(() {
+                  _selectedPageIndex = index;
+                  _pageController.jumpToPage(_selectedPageIndex);
+                });
+              },
+              selectedIndex: _selectedPageIndex,
+              // tab button hover color
+              haptic: true, // haptic feedback
+              tabBorderRadius: 5,
 
-          //other params
+              // tab button shadow
+              curve: Curves.easeIn, // tab animation curves
+              duration:
+                  const Duration(milliseconds: 200), // tab animation duration
+              gap: 8, // the tab button gap between icon and text
+              color: Colors.grey[800], // unselected icon color
+              activeColor: Colors.indigo[600], // selected icon and text color
+              iconSize: 24, // tab button icon size
+              tabBackgroundColor: Colors.indigo
+                  .withOpacity(0.1), // selected tab background color
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 8), // navigation bar padding
+              tabs: const [
+                GButton(
+                  icon: IconlyBold.home,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: IconlyBold.category,
+                  text: 'Category',
+                ),
+                GButton(
+                  icon: IconlyBold.bookmark,
+                  text: 'Saved',
+                ),
+                GButton(
+                  icon: IconlyBold.profile,
+                  text: 'Profile',
+                )
+              ]),
         ),
         body: WillPopScope(
           child: PageView(
